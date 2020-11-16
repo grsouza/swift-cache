@@ -1,5 +1,6 @@
 import Foundation
 
+/// `NSCache` swifty wrapper.
 public struct Cache<Key: Hashable, Value> {
 
     public init() {
@@ -82,7 +83,7 @@ public struct Cache<Key: Hashable, Value> {
     }
 
     /// Empties the cache.
-    public func removeAllObjects() {
+    public func removeAllValues() {
         cache.removeAllObjects()
     }
 
