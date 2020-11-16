@@ -3,15 +3,15 @@ import Foundation
 public struct Cache<Key: Hashable, Value> {
 
     public init() {
-        wrapped.delegate = delegate
+        cache.delegate = delegate
     }
 
     /// The name of the cache.
     ///
     /// The default value is an empty string ("").
     public var name: String {
-        get { wrapped.name }
-        set { wrapped.name = newValue }
+        get { cache.name }
+        set { cache.name = newValue }
     }
 
     /// The maximum number of objects the cache should hold.
@@ -20,8 +20,8 @@ public struct Cache<Key: Hashable, Value> {
     ///
     /// This is not a strict limit—if the cache goes over the limit, an object in the cache could be evicted instantly, later, or possibly never, depending on the implementation details of the cache.
     public var countLimit: Int {
-        get { wrapped.countLimit }
-        set { wrapped.countLimit = newValue }
+        get { cache.countLimit }
+        set { cache.countLimit = newValue }
     }
 
     /// The maximum total cost that the cache can hold before it starts evicting objects.
@@ -32,8 +32,8 @@ public struct Cache<Key: Hashable, Value> {
     ///
     /// This is not a strict limit, and if the cache goes over the limit, an object in the cache could be evicted instantly, at a later point in time, or possibly never, all depending on the implementation details of the cache.
     public var totalCostLimit: Int {
-        get { wrapped.totalCostLimit }
-        set { wrapped.totalCostLimit = newValue }
+        get { cache.totalCostLimit }
+        set { cache.totalCostLimit = newValue }
     }
 
     /// Called when a value is about to be evicted or removed from the cache.
@@ -50,7 +50,7 @@ public struct Cache<Key: Hashable, Value> {
     /// A cache does not copy the key values that are put into it.
     public func setValue(_ value: Value, forKey key: Key) {
         let entry = Entry(value)
-        wrapped.setObject(entry, forKey: WrappedKey(key))
+        cache.setObject(entry, forKey: WrappedKey(key))
     }
 
     /// Sets the value of the specified key in the cache, and associates the key-value pair with the specified cost.
@@ -64,33 +64,33 @@ public struct Cache<Key: Hashable, Value> {
     /// A cache does not copy the key values that are put into it.
     public func setValue(_ value: Value, forKey key: Key, cost: Int) {
         let entry = Entry(value)
-        wrapped.setObject(entry, forKey: WrappedKey(key), cost: cost)
+        cache.setObject(entry, forKey: WrappedKey(key), cost: cost)
     }
 
     /// Returns the value associated with a given key.
     /// - Parameter key: A key identifying the value.
     /// - Returns: The value associated with `key`, or `nil` if no value is associated with key.
     public func value(forKey key: Key) -> Value? {
-        let entry = wrapped.object(forKey: WrappedKey(key))
+        let entry = cache.object(forKey: WrappedKey(key))
         return entry?.value
     }
 
     /// Removes the value of the specified key in the cache.
     /// - Parameter key: The key identifying the value to be removed.
     public func removeValue(forKey key: Key) {
-        wrapped.removeObject(forKey: WrappedKey(key))
+        cache.removeObject(forKey: WrappedKey(key))
     }
 
     /// Empties the cache.
     public func removeAllObjects() {
-        wrapped.removeAllObjects()
+        cache.removeAllObjects()
     }
 
     // MARK: - Private
 
-    private let wrapped = NSCache<WrappedKey, Entry>()
+    private let cache = NSCache<WrappedKey, Entry>()
     private let delegate = Delegate()
-    
+
 }
 
 private extension Cache {
