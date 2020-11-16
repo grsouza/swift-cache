@@ -2,8 +2,9 @@ import Foundation
 
 public struct Cache<Key: Hashable, Value> {
 
-    private let wrapped = NSCache<WrappedKey, Entry>()
-    private let delegate = Delegate()
+    public init() {
+        wrapped.delegate = delegate
+    }
 
     /// The name of the cache.
     ///
@@ -39,10 +40,6 @@ public struct Cache<Key: Hashable, Value> {
     public var willEvictValue: ((Value) -> Void)? {
         get { delegate.willEvictValue }
         set { delegate.willEvictValue = newValue }
-    }
-
-    public init() {
-        wrapped.delegate = delegate
     }
 
     /// Sets the value of the specified key in the cache.
@@ -88,6 +85,12 @@ public struct Cache<Key: Hashable, Value> {
     public func removeAllObjects() {
         wrapped.removeAllObjects()
     }
+
+    // MARK: - Private
+
+    private let wrapped = NSCache<WrappedKey, Entry>()
+    private let delegate = Delegate()
+    
 }
 
 private extension Cache {
