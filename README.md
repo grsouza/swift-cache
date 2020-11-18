@@ -25,19 +25,49 @@ import Cache
 
 ## Basic usage
 
-Just instantiate a new Cache object and use `setValue(_:forKey:)`, `value(forKey:)` and `removeValue(forKey:)` for manipulating the cache. There are some configuration properties that can be set on the cache type, for example  the maximum number of items that cache holds.
+Take a look at the [implementation](/Sources/Cache/Cache.swift), for more in-depth detail.
 
-Take a look at the [implementation](/Sources/Cache/Cache.swift), there are plenty of documentations there.
 
+### Creating a Cache object
 ```swift
-let cache = Cache<String, Int>() 
+// This is a Cache with Strings as Keys and Int as values.
+let cache = Cache<String, Int>()
 
+// You can customize some aspects of the cache.
+cache.name = "My cache"
+
+// maximum number of values in cache
+cache.countLimit = 10 
+
+// total cost of the values in cache
+cache.totalCostLimit = 100
+
+// observe when a value will be evicted from cache.
+cache.willEvictValue = { value in 
+    print("\(value) is being evicted.")
+}
+```
+
+### Inserting values in cache
+```swift
 cache.setValue(0, forKey: "A string")
 
-let value = cache.value(forKey: "A string")
+// Or associate a cost with the key-pair
+cache.setValue(100, forKey: "my-key", cost: 10)
+```
 
+### Retrieving value
+```swift
+let value = cache.value(forKey: "my-key")
+// value is Optional<Int>
+```
+
+### Removing value
+```swift
+// Remove a value
 cache.removeValue(forKey: "A string")
 
+// Empties the cache
 cache.removeAllValues()
 ```
 
